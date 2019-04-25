@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ПредиктГруп. OLAP для 1С: ERP. Формируем отчеты привычным способом в Excel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="bootstrap.css" media="screen">
+    <link rel="stylesheet" href="assets/css/custom.min.css">
+    <link rel="icon" href="img/pm_logo.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131511447-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-131511447-1');
+    </script> 
+  </head>
+  <body>
+    <div class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+      <div class="container">
+        <a href="../" class="navbar-brand"><img alt="PredicGroup" src="img/predictgroup.png" height="50px"></a>
+	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+	    	<span class="navbar-toggler-icon"></span>
+	  	</button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="predictfx.html">PredictFX Графики </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="olap1cerp.html">OLAP 1С:ERP </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="sap.html">Интеграция SAP </a>
+            </li>            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">Поддержка <span class="caret"></span></a>
+              <div class="dropdown-menu" aria-labelledby="download">
+                <a class="dropdown-item" href="support.html">Поддержка</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://github.com/predictgroup">Исходные коды программ</a>
+                <a class="dropdown-item" href="documents.html">Документация</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="contacts.html">Контакты</a>
+              </div>
+            </li>
+          </ul>
+
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+
+      <!-- Containers
+      ================================================== -->
+
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="olap1cerp.html">OLAP для 1С</a></li>        
+        <li class="breadcrumb-item active">OLAP для 1С: ERP. Формируем отчеты привычным способом в Excel</li>
+      </ol>
+
+
+      <!-- News -->
+      <div class="bs-docs-section">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <span class="badge badge-primary">25 апреля 2019</span>
+            <span class="badge badge-secondary">OLAP для 1С</span>
+          </div>
+        </div>
+
+	      <div class="row">
+
+          <div class="col-lg-12">
+
+            <h4>OLAP для 1С: ERP. Формируем отчеты привычным способом в Excel</h4>
+            <p>Как программистам так и пользователям известно, как долго и сложно создаются отчеты в 1C. Однако, мы можем предложить на рассмотрение не стандартное решение - это загрузка данных в OLAP. OLAP - онлайн аналитическая отчетность для предприятий с возможностью построения таблиц и графиков. Для тех, кто это попробовал, оказалось экстремально удобным средством для построения аналитической отчетности в Microsoft Excel, как говорится, привычным способом для рядовых пользователей на предприятиях использующих 1С:ERP.</p>
+
+            <p>В нашем примере мы будем использовать Visual Studio C#, 2 базы данных Microsoft SQL - одна это 1С:ERP и вторая для аналитической отчетности, а так-же сводные таблицы в Microsoft Excel.</p>
+
+            <p>Чтобы получить информацию о таблицах и структуре базы данных 1C:ERP будем использовать готовые обработки, которые уже есть в интернет (GetDatabaseStructure.epf или base_structure82.epf). </p>
+
+            <img src="img/database_1c_struct.png">
+
+            <p>При помощи такого инструмента мы увидим список полей для объектов 1С (справочники, документы, строки документов, перечисления и т.п.) и их назначение, это нам пригодится в дальнейшем для программирования загрузки данных в OLAP. На основе полученных данных мы подготовим таблицы в нашей отдельной базе данных для аналитической отчетности в Microsoft SQL.</p>
+
+            <p>В Visual Studio добавим структуру таблиц 1С в Linq to SQL:</p>
+
+            <img src="img/vs_dbml_struct.png">
+
+            <p>Накинем еще структуру таблиц нашей аналитической базы в Linq to SQL:</p>
+
+            <img src="img/vs_dbml_olap.png">
+
+            <p>Создаем класс в Visual Studio для перегрузки данных из структуры 1C в структуру OLAP</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></td><td><pre style="margin: 0; line-height: 125%">            <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> <span style="color: #2b91af">DocProductionImporter</span>
+            {
+                DataClasses1DataContext dataContext;
+                s1_DataClasses1DataContext dataContextS1;
+
+                <span style="color: #0000ff">public</span> DocProductionImporter()
+                {
+                    dataContext = <span style="color: #0000ff">new</span> DataClasses1DataContext();
+                    dataContextS1 = <span style="color: #0000ff">new</span> s1_DataClasses1DataContext();
+                }
+
+                ....
+            }
+</pre></td></tr></table></div>
+
+
+            <p>Загрузим в память список идентификаторов документов 1С, уже имеющихся в базе OLAP. Уникальность документов в 1C поддерживается в основном при помощи IDRRef и Version. Tuple поможет нам создать составной индекс, при необходимости. </p>
+
+            <p>Заполним индексы из таблицы SQL:</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8</pre></td><td><pre style="margin: 0; line-height: 125%">            HashSet&lt;Tuple&lt;System.Data.Linq.Binary, <span style="color: #008000">// IDRRef, Version</span>
+                            System.Data.Linq.Binary&gt;&gt; fndDocVer = <span style="color: #0000ff">new</span> HashSet&lt;Tuple&lt;System.Data.Linq.Binary,
+                            System.Data.Linq.Binary&gt;&gt;();
+
+            <span style="color: #0000ff">foreach</span> (DocProduction doc <span style="color: #0000ff">in</span> docs)
+            {
+                fndDocVer.Add(Tuple.Create(doc.IDRRef, doc.Version));
+            }
+</pre></td></tr></table></div>
+
+
+            <p>Делаем выборку документов из 1C:ERP и проверяем их наличие в нашей базе OLAP. Поле _Version содержит значение для сверки модифицированности документа в 1C.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></td><td><pre style="margin: 0; line-height: 125%">            <span style="color: #2b91af">var</span> prodDocs = <span style="color: #0000ff">from</span> c <span style="color: #0000ff">in</span> dataContextS1._Document581s
+                           <span style="color: #0000ff">where</span> c._Posted == posted
+                           <span style="color: #0000ff">select</span> c;
+            <span style="color: #2b91af">int</span> i = 0;
+            <span style="color: #0000ff">foreach</span> (_Document581 doc <span style="color: #0000ff">in</span> prodDocs)
+            {
+
+                <span style="color: #0000ff">if</span> (fndDocVer.Contains(Tuple.Create(doc._IDRRef, doc._Version)) == <span style="color: #0000ff">true</span>)
+                {
+                    i++;
+                    <span style="color: #0000ff">continue</span>;
+                }
+
+            ....
+</pre></td></tr></table></div>
+
+
+            <p>Создадим новый или обновим существующий документ</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4</pre></td><td><pre style="margin: 0; line-height: 125%">            <span style="color: #008000">// NEW</span>
+            DocProduction dp = <span style="color: #0000ff">new</span> DocProduction();
+            dp.NumberPrefix = doc._NumberPrefix;
+            dp.DocNumber = doc._Number;
+</pre></td></tr></table></div>
+
+
+            <p>Внутри цикла по документам ссылки на справочники и друге объекты подбираем из dictionary.</p>
+            <p>Заполним dictionary для последующего поиска в памяти (значительно ускоряет процесс, по сравнению с поиском из таблиц БД SQL):</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td><pre style="margin: 0; line-height: 125%">            Dictionary&lt;System.Data.Linq.Binary, Int64&gt; fndDepartments = <span style="color: #0000ff">new</span> Dictionary&lt;System.Data.Linq.Binary, Int64&gt;();
+            <span style="color: #2b91af">var</span> fDepartments = <span style="color: #0000ff">from</span> g <span style="color: #0000ff">in</span> dataContext.DimDepartments
+                               <span style="color: #0000ff">select</span> g;
+            <span style="color: #0000ff">foreach</span> (DimDepartments fd <span style="color: #0000ff">in</span> fDepartments)
+            {
+                fndDepartments.Add(fd.IDRRef, fd.ID); <span style="color: #008000">// ИД в 1С и ИД в OLAP</span>
+            }
+
+            &lt;p&gt;Подбирем элемент справочника в процессе загрузки документов:&lt;/p&gt;
+            <span style="color: #0000ff">if</span> (fndDepartments.ContainsKey(doc._Fld15867RRef))
+            {
+                Int64 val;
+                fndDepartments.TryGetValue(doc._Fld15867RRef, <span style="color: #0000ff">out</span> val);
+                dp.DepartmentID = val;
+            }
+            <span style="color: #0000ff">else</span>
+                <span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> Exception(); <span style="color: #008000">// Не нашли значение в справочнике</span>
+</pre></td></tr></table></div>
+
+
+            <p>В конце работы модуля сохраним документ в БД OLAP:</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td><pre style="margin: 0; line-height: 125%">            dp.IDRRef = doc._IDRRef;
+            dp.Version = doc._Version;
+
+            <span style="color: #0000ff">if</span> (doc._Posted == posted) <span style="color: #008000">// Значение проведения документа в 1С</span>
+                dp.Active = <span style="color: #0000ff">true</span>;
+            <span style="color: #0000ff">else</span>
+                dp.Active = <span style="color: #0000ff">false</span>;
+            dataContext.DocProductions.InsertOnSubmit(dp);
+            dataContext.SubmitChanges();
+</pre></td></tr></table></div>
+
+
+            <p>На этом работа в Visual Studio по заполнению табличек закончена, переходим к сводным таблицам в Excel. Добавляем новую сводную таблицу:</p>
+
+            <img src="img/pivot_table_excel.png">
+
+            <p>Рисуем таблицу в Excel добавляя нужные поля в табличную часть, результат должен быть следующим (примерный вариант):</p>
+
+            <img src="img/excel_table_final.png">
+
+
+            <p>Мы рассмотрели краткий пример загрузки данных в отдельную базу данных SQL для формирования аналитической отчетности в OLAP и Excel. Полученный в процессе такой разработки набор срезов и показателей готов в к тому, чтобы его использовал конечный пользователь в сводной таблице Microsoft Excel добавляя формируя тем самым, требуемую отчетность без прямого участия программиста.</p>
+
+            <p><a href="https://github.com/PredictGroup/1C-ERP-OLAP">Подробно рассмотреть исходные коды примеров на GitHub</a></p>
+
+          </div>
+
+          <div class="col-lg-12">
+            <p>
+            <div id="disqus_thread"></div>
+            <script>
+
+            /**
+            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+            /*
+            var disqus_config = function () {
+            this.page.url = 'http://www.predictgroup.com/olap_tutorial.html';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = OLAP_TUTORIAL; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+            */
+            (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://predictgroup-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            </p>
+          </div>
+
+        </div>          
+
+	    </div>
+
+        <!--  -->
+      <div class="bs-docs-section">
+
+<!--
+        <div class="row">
+          <div class="col-lg-12">
+            <div>
+              <ul class="pagination">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">&laquo;</a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">3</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">4</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">5</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">&raquo;</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+-->
+
+	  </div>
+
+      <footer id="footer">
+        <div class="row">
+          <div class="col-lg-12">
+
+            <ul class="list-unstyled">
+              <li class="float-lg-right"><a href="#top">Вернуться наверх</a></li>
+              <li><a href="https://twitter.com/predictgroup">Twitter</a></li>
+              <li><a href="https://github.com/predictgroup/">GitHub</a></li>
+            </ul>
+            <p>Авторские права &copy; <a href="copyrights.html">ООО "ПредиктГруп"</a> 2019.</p>
+            <p>Based on <a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fontawesome.io/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="https://fonts.google.com/" rel="nofollow">Google</a>.</p>
+
+          </div>
+        </div>
+
+      </footer>
+
+
+    </div>
+
+
+    <script src="vendor/jquery/dist/jquery.min.js"></script>
+    <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
+    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
