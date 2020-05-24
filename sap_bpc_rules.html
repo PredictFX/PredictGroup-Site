@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ПредиктГруп. Интеграция с SAP ERP. Реализация мобильного прайс-чекера в магазине</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="bootstrap.css" media="screen">
+    <link rel="stylesheet" href="assets/css/custom.min.css">
+    <link rel="icon" href="img/pm_logo.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131511447-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-131511447-1');
+    </script> 
+  </head>
+  <body>
+    <div class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+      <div class="container">
+        <a href="../" class="navbar-brand"><img alt="PredicGroup" src="img/predictgroup.png" height="50px"></a>
+	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+	    	<span class="navbar-toggler-icon"></span>
+	  	</button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="predictfx.html">PredictFX Графики </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="olap1cerp.html">OLAP 1С:ERP </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="sap_bpc.html">SAP BPC + BW </a>
+            </li>				
+            <li class="nav-item">
+              <a class="nav-link" href="sap.html">Интеграция SAP </a>
+            </li>            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">Поддержка <span class="caret"></span></a>
+              <div class="dropdown-menu" aria-labelledby="download">
+                <a class="dropdown-item" href="support.html">Поддержка</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://github.com/predictgroup">Исходные коды программ</a>
+                <!-- <a class="dropdown-item" href="documents.html">Документация</a> -->
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="contacts.html">Контакты</a>
+              </div>
+            </li>
+          </ul>
+
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+
+      <!-- Containers
+      ================================================== -->
+
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="sap_bpc.html">SAP BPC + BI/BW</a></li>        
+        <li class="breadcrumb-item active">Реализация правил преобразования бух. счетов в статьи BPC с использованием шаблонов</li>
+      </ol>
+
+
+      <!-- News -->
+      <div class="bs-docs-section">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <span class="badge badge-primary">21 мая 2020</span>
+            <span class="badge badge-secondary">SAP BPC + BI/BW</span>
+          </div>
+        </div>
+
+	    <div class="row">
+
+          <div class="col-lg-12">
+
+            <h4>SAP BPC + BI/BW. Реализация правил преобразования бух. счетов в статьи BPC с использованием шаблонов.</h4>
+            <p>SAP Business Planning and Consolidation модуль для планирования и бюджетирования SAP в данном случаем используем разработку ABAP для простого ведения таблицы соответствия бухгалтерских счетов и МВЗ со статьями BPC.</p>
+            <p><img src="img/bpc_rules_bi.png"></p>
+            <p>Используем шаблон для формирования списка МВЗ заменяя значение числа от 0 до 9 на Х.</p>
+            <p><img src="img/bpc_rules_list.PNG"></p>
+            <p>Создаем трансформацию преобразования талицы шаблонов в таблицу для поиска готовых значений Счетов и МВЗ</p>
+            <p><img src="img/bpc_rules_transf.PNG"></p>
+			
+			<p>В трансформации пишем цикл от 0 до 9</p>
+			<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(255, 255, 255); color: rgb(0, 0, 0);">      <span class="hljs-symbol" style="color: rgb(28, 0, 207);">CLEAR</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LT_RESULT_1</span>.
+			  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">MOVE</span>-<span class="hljs-symbol" style="color: rgb(28, 0, 207);">CORRESPONDING</span> &lt;<span class="hljs-symbol" style="color: rgb(28, 0, 207);">RESULT_FIELDS_1</span>&gt; <span class="hljs-symbol" style="color: rgb(28, 0, 207);">TO</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>.
+			  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-<span class="hljs-symbol" style="color: rgb(28, 0, 207);">RECORD</span> = <span class="hljs-string" style="color: rgb(196, 26, 22);">''</span>.
+
+			  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">IF</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">BIC</span>/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ZCSTC1ERP</span>(<span class="hljs-number" style="color: rgb(28, 0, 207);">1</span>) = <span class="hljs-string" style="color: rgb(196, 26, 22);">'X'</span>.
+				idx = <span class="hljs-number" style="color: rgb(28, 0, 207);">0.</span>
+				<span class="hljs-symbol" style="color: rgb(28, 0, 207);">WHILE</span> idx &lt;= <span class="hljs-number" style="color: rgb(28, 0, 207);">9.</span>
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">MOVE</span> idx to idxC.
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">CONCATENATE</span> idxC <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">BIC</span>/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ZCSTC1ERP</span>+<span class="hljs-number" style="color: rgb(28, 0, 207);">1</span>(<span class="hljs-number" style="color: rgb(28, 0, 207);">3</span>) <span class="hljs-symbol" style="color: rgb(28, 0, 207);">INTO</span>
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">BIC</span>/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ZCSTC1ERP</span>.
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">IF</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">BIC</span>/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ZCSTC1BPC</span>(<span class="hljs-number" style="color: rgb(28, 0, 207);">1</span>) = <span class="hljs-string" style="color: rgb(196, 26, 22);">'X'</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">OR</span> theXflag = <span class="hljs-string" style="color: rgb(196, 26, 22);">'X'</span>.
+					<span class="hljs-symbol" style="color: rgb(28, 0, 207);">CONCATENATE</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">BIC</span>/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ZCSTC1BPC</span>+<span class="hljs-number" style="color: rgb(28, 0, 207);">1</span>(<span class="hljs-number" style="color: rgb(28, 0, 207);">3</span>) idxC <span class="hljs-symbol" style="color: rgb(28, 0, 207);">INTO</span>
+					<span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span>-/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">BIC</span>/<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ZCSTC1BPC</span>.
+
+					theXflag = <span class="hljs-string" style="color: rgb(196, 26, 22);">'X'</span>.
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">ENDIF</span>.
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">APPEND</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">TO</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LT_RESULT_1</span>.
+				  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">ADD</span> <span class="hljs-number" style="color: rgb(28, 0, 207);">1</span> to idx.
+				<span class="hljs-symbol" style="color: rgb(28, 0, 207);">ENDWHILE</span>.
+			  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">ELSE</span>.
+				<span class="hljs-symbol" style="color: rgb(28, 0, 207);">APPEND</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LS_RESULT_1</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">TO</span> <span class="hljs-symbol" style="color: rgb(28, 0, 207);">LT_RESULT_1</span>.
+			  <span class="hljs-symbol" style="color: rgb(28, 0, 207);">ENDIF</span>.</pre>
+
+            <p>В результате загрузки получаем готовую таблицу с данными для обработки соответствия счетов</p>
+            <p><img src="img/bpc_rules_result.PNG"></p>
+
+            <p>Полный код трансформации <a href="https://github.com/PredictGroup/ABAP_UTILS/blob/master/zds_accrules_transformation">на GitHub</a></p>
+
+          </div>
+
+          <div class="col-lg-12">
+            <p>
+            <div id="disqus_thread"></div>
+            <script>
+
+            /**
+            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+            /*
+            var disqus_config = function () {
+            this.page.url = 'http://www.predictgroup.com/sap_bpc_rules.html';  
+            this.page.identifier = SAP_BPC_RULES; 
+            };
+            */
+            (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://predictgroup-com.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            </p>
+          </div>
+
+	    </div>
+
+	  </div>
+        <!--  -->
+      <div class="bs-docs-section">
+
+<!--
+        <div class="row">
+          <div class="col-lg-12">
+            <div>
+              <ul class="pagination">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">&laquo;</a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">3</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">4</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">5</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">&raquo;</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+-->
+
+	  </div>
+
+      <footer id="footer">
+        <div class="row">
+          <div class="col-lg-12">
+
+            <ul class="list-unstyled">
+              <li class="float-lg-right"><a href="#top">Вернуться наверх</a></li>
+              <li><a href="https://twitter.com/predictgroup">Twitter</a></li>
+              <li><a href="https://github.com/predictgroup/">GitHub</a></li>
+            </ul>
+            <p>Авторские права &copy; <a href="copyrights.html">PredicGroup Ltd.</a> 2019.</p>
+            <p>Based on <a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fontawesome.io/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="https://fonts.google.com/" rel="nofollow">Google</a>.</p>
+
+          </div>
+        </div>
+
+      </footer>
+
+
+    </div>
+
+
+    <script src="vendor/jquery/dist/jquery.min.js"></script>
+    <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
+    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
